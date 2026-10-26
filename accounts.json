@@ -1,37 +1,14 @@
 [
-
-  
- {
-    "uid": "8252878512",
-    "password": "4AB1F129FCFA342A432748981405FBD3235BB010C64B49F4632F0DBC56FC31B9",
-    "name": "HAMMAD939957",
-    "account_id": "18703037034",
+  {
+    "uid": "8336376307",
+    "password": "HAMMADPAPA93",
     "region": "IND",
-    "created_at": "2026-10-14 16:28:01"
+    "clan_id": "3055682494"
   },
   {
-    "uid": "8252878727",
-    "password": "98EE01F0268809E7A8EBAA20A9A1D7140C00E5C38434053C47B65F039CF09E0B",
-    "name": "HAMMAD484950",
-    "account_id": "18703037215",
+    "uid": "8336376655",
+    "password": "HAMMADPAPA93",
     "region": "IND",
-    "created_at": "2026-10-14 16:28:01"
-  },
-  {
-    "uid": "8252904081",
-    "password": "B84E35BDB77601664CACB4EB85D907BAA53A5E0B0CF116F39C6A505F0595111D",
-    "name": "HAMMAD443183",
-    "account_id": "18703066235",
-    "region": "IND",
-    "created_at": "2026-10-14 16:29:00"
-  },
-  
-  {
-    "uid": "8252904314",
-    "password": "1C56A05850AC2F02B5673E56FBA557C98F140CD5B722773D7427AB3B196B0112",
-    "name": "HAMMAD378078",
-    "account_id": "18703066332",
-    "region": "IND",
-    "created_at": "2026-10-14 16:29:00"
+    "clan_id": "3055682494"
   }
 ]

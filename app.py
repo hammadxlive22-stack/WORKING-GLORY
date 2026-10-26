@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # ============================================================
 #   CGU — FREE FIRE 4-BOT SQUAD (SINGLE FILE - FINAL FIXED)
-#   + REAL MOVE/FIRE/JUMP PACKETS (From Captured PCAP)
+#   + REAL MOVE/FIRE/JUMP PACKETS (Dynamic Header Fix)
 #   + NEWBIE SELECT 1 KARAKTER (item_id 102000037)
 #   + COMPLETE ANTI-AFK (Fire+Move+Ping+Jump)
 # ============================================================
@@ -79,10 +79,10 @@ ANTI_AFK_IDLE_CHANCE    = 0.08
 ANTI_AFK_SPRINT_CHANCE  = 0.35
 ANTI_AFK_DECISION_SEC   = 2.5
 ANTI_AFK_PING_EVERY     = 2.0
-ANTI_AFK_JUMP_EVERY     = 20.0
-ANTI_AFK_MIN_INTERVAL   = 2.5
-ANTI_AFK_MAX_INTERVAL   = 4.5
-ANTI_AFK_PACKET_GAP     = 0.08
+ANTI_AFK_JUMP_EVERY     = 30.0
+ANTI_AFK_MIN_INTERVAL   = 0.4
+ANTI_AFK_MAX_INTERVAL   = 0.8
+ANTI_AFK_PACKET_GAP     = 0.05
 
 ANALOG_DIRECTIONS = [
     (0.0,  1.0, "maju"), (0.0, -1.0, "mundur"),
@@ -94,11 +94,11 @@ ANALOG_DIRECTIONS = [
 
 # ==================== SPEED MOVEMENT CONFIG ====================
 ENABLE_SPEED_MOVEMENT       = True
-MOVEMENT_SPEED_MIN          = 1.0
-MOVEMENT_SPEED_MAX          = 1.4
+MOVEMENT_SPEED_MIN          = 2.5
+MOVEMENT_SPEED_MAX          = 3.5
 MOVEMENT_PATTERN            = "circle"
 MOVEMENT_TICK_MS            = 240
-MOVEMENT_RADIUS             = 180
+MOVEMENT_RADIUS             = 800
 MOVEMENT_UPDATE_SPEED_EVERY = 4.0
 
 MOVEMENT_STATE_IDLE_CHANCE   = 0.10
@@ -122,7 +122,7 @@ STATE_SPEED = {
     "jump":   55, "crouch": 25, "prone": 15,
 }
 
-# ==================== NEWBIE CHARACTER SELECT (1 KARAKTER) ====================
+# ==================== NEWBIE CHARACTER SELECT ====================
 ENABLE_NEWBIE_CHARACTER     = True
 NEWBIE_SELECT_BEFORE_TEAM   = False
 NEWBIE_SELECT_DELAY         = 2.0
@@ -145,9 +145,63 @@ REGION_LANG = {"ME":"ar","IND":"hi","ID":"id","VN":"vi","TH":"th","BD":"bn",
                "PK":"ur","TW":"zh","RU":"ru","SAC":"es","BR":"pt","NA":"pt",
                "SG":"pt","US":"pt"}
 
-# ==================== CAPTURED PAYLOADS (FROM PCAP) ====================
-CAPTURED_JUMP_PACKET = "6a7fa2a3a1a38ba3f316aa397f1348ba3719bd15a447eed7995d6b625c646ece0060dc31404cf79ddfdbcf63c3d501d3"
-CAPTURED_FIRE_PACKET = "6874a3a355a48fa1003403846bc0f5aa01c00bf10400d003d93f3f0000000006b209c0f5aa01c510ca0300f704663f3f0000000017b49601c0f5aa01d911a503008f05963f3f0000000004826cd0f5aa01d31cd70500ff02ab3f3f000000000dcc15c0f5aa01b6118806004b433f3f000000000a8075c0f5aa018f17f80100e305723f3f0000000011a58d01f2f5aa01c627f70400ce02d23f3f0000000015fe8201c0f5aa01ee03870500b103a73f3f000000000cd5b101d0f5aa01a61dcc0500b302503f3f0000000018b68301c0f5aa0184048706004cc33f3f00000000059e8501c0f5aa01be038c0600103e3f3f0000000008978401c0f5aa01bb0fbe04009004213f3f000000000e9d7ec0f5aa019b0de70100e805f23f3f0000000013c5ad01f2f5aa01bd2b1400b5067e3f3f000000000f8f9301c0f5aa01bc05c40500c6022e3f3f0000000019d074f2f5aa01d62da70400a604df3f3f000000001ab66dc0f5aa018a13bb0200ca05ee3f3f0000000009d671f2f5aa01da289f0400e804e13f3f00000000129d9301c0f5aa01c208b804009604213f3f0000000001c9a001c0f5aa01a5190000003f3f3f0000000002907ec0f5aa01960a47008806fb3f3f0000000007958a01c0f5aa018b09d00500ab024f3f3f0000000016f9aa01c0f5aa018316a80200a604143f3f0000000014a18b01c0f5aa019911c80300cf04643f3f00000000109c67c0f5aa018007cb0500d801cb3f3f000000000bbc70c0f5aa019f0de70500e901b23f3f000000000c"
+# ==================== CAPTURED PAYLOADS ====================
+CAPTURED_JUMP_BODY = "7fa2a3a1a38ba3f316aa397f1348ba3719bd15a447eed7995d6b625c646ece0060dc31404cf79ddfdbcf63c3d501d3"
+CAPTURED_FIRE_BODY = "74a3a355a48fa1003403846bc0f5aa01c00bf10400d003d93f3f0000000006b209c0f5aa01c510ca0300f704663f3f0000000017b49601c0f5aa01d911a503008f05963f3f0000000004826cd0f5aa01d31cd70500ff02ab3f3f000000000dcc15c0f5aa01b6118806004b433f3f000000000a8075c0f5aa018f17f80100e305723f3f0000000011a58d01f2f5aa01c627f70400ce02d23f3f0000000015fe8201c0f5aa01ee03870500b103a73f3f000000000cd5b101d0f5aa01a61dcc0500b302503f3f0000000018b68301c0f5aa0184048706004cc33f3f00000000059e8501c0f5aa01be038c0600103e3f3f0000000008978401c0f5aa01bb0fbe04009004213f3f000000000e9d7ec0f5aa019b0de70100e805f23f3f0000000013c5ad01f2f5aa01bd2b1400b5067e3f3f000000000f8f9301c0f5aa01bc05c40500c6022e3f3f0000000019d074f2f5aa01d62da70400a604df3f3f000000001ab66dc0f5aa018a13bb0200ca05ee3f3f0000000009d671f2f5aa01da289f0400e804e13f3f00000000129d9301c0f5aa01c208b804009604213f3f0000000001c9a001c0f5aa01a5190000003f3f3f0000000002907ec0f5aa01960a47008806fb3f3f0000000007958a01c0f5aa018b09d00500ab024f3f3f0000000016f9aa01c0f5aa018316a80200a604143f3f0000000014a18b01c0f5aa019911c80300cf04643f3f00000000109c67c0f5aa018007cb0500d801cb3f3f000000000bbc70c0f5aa019f0de70500e901b23f3f000000000c"
+
+# ==================== NEW MOVEMENT ENGINE ====================
+KEY0 = 0xfc
+CMD_MOVE = 2001
+
+def _xor(x: int) -> int:
+    return (x ^ KEY0) & 0xFF
+
+def _uvarint(n: int) -> bytes:
+    if n < 0: raise ValueError(n)
+    out = bytearray()
+    while True:
+        b = n & 0x7F
+        n >>= 7
+        if n: out.append(b | 0x80)
+        else:
+            out.append(b)
+            return bytes(out)
+
+def _zigzag(n: int) -> int:
+    return ((n << 1) ^ (n >> 63)) & 0xFFFFFFFFFFFFFFFF
+
+def _f32(x: float) -> int:
+    return int.from_bytes(struct.pack(">f", float(x)), "big")
+
+def build_real_move_packet(slot, x, y, z, net_tick, counter_ms, udp_key_byte, dir_x=0.0, dir_y=1.0, dir_z=0.0):
+    global KEY0
+    KEY0 = udp_key_byte
+    entity = (1 << 24) | (slot & 0xFF)
+    vals = [
+        entity,
+        _zigzag(int(x)), _zigzag(int(y)), _zigzag(int(z)),
+        0, 0, 0, 
+        0, 0,
+        0, 0, 0, 
+        1, 1,
+        _f32(dir_x), _f32(dir_y), _f32(dir_z),
+        0, 0,
+        net_tick,
+        0, 0, 0,
+        counter_ms,
+    ]
+    body = b"".join(_uvarint(v) for v in vals)
+    header = bytes([
+        0x66, 0xB7,
+        _xor(0), 
+        _xor(CMD_MOVE & 0xFF), 
+        _xor((CMD_MOVE >> 8) & 0xFF), 
+        _xor(len(body)), 
+        _xor(0), 
+        _xor(0)
+    ])
+    return header + body
+# ============================================================
 
 # ==================== STATE ====================
 class BotState:
@@ -655,54 +709,6 @@ async def decode_protobuf_async(data):
 # ============================================================
 # ✅ INLINE: FF MOVE/ENEMY PACKET BUILDERS
 # ============================================================
-def _ff_build_move_body(
-    flag: bytes = b"\x81\x80\x80\x08",
-    pos_x: int = 0, pos_y: int = 0, pos_z: int = 0,
-    player_index: int = 0,
-    fields: List[int] = None,
-    timestamp1: int = 0, timestamp2: int = 0, timestamp3: int = 0,
-    trailing: int = 0, checksum: int = 0,
-) -> bytes:
-    if fields is None: fields = [0, 0, 0, 0, 0, 0]
-    body = bytearray()
-    body += flag
-    body += encode_varint(pos_x)
-    body += encode_varint(pos_y)
-    body += encode_varint(pos_z)
-    body += encode_varint(player_index)
-    for f in fields: body += encode_varint(f)
-    body += encode_varint(timestamp1)
-    body += encode_varint(timestamp2)
-    body += encode_varint(timestamp3)
-    body += encode_varint(trailing)
-    body += encode_varint(checksum)
-    return bytes(body)
-
-def _ff_build_move_packet(move: int, body: bytes, subtype: int = 0x61, flag: int = 0xB7) -> bytes:
-    header = bytes([0x66, flag, subtype, 0x66, move, 0x66])
-    return header + body
-
-def _ff_parse_move_body(body: bytes):
-    pos = 0; result = {}
-    result["flag"] = body[pos:pos+4].hex(); pos += 4
-    result["pos_x"], pos = decode_varint(body, pos)
-    result["pos_y"], pos = decode_varint(body, pos)
-    result["pos_z"], pos = decode_varint(body, pos)
-    result["player_index"], pos = decode_varint(body, pos)
-    fields = []
-    for _ in range(6):
-        v, pos = decode_varint(body, pos); fields.append(v)
-    result["fields"] = fields
-    result["timestamp1"], pos = decode_varint(body, pos)
-    result["timestamp2"], pos = decode_varint(body, pos)
-    result["timestamp3"], pos = decode_varint(body, pos)
-    result["trailing"], pos = decode_varint(body, pos)
-    if pos < len(body):
-        result["checksum"], pos = decode_varint(body, pos)
-    else:
-        result["checksum"] = 0
-    return result
-
 def _ff_build_enemy_2001(
     uid: bytes, pos_x: int, pos_y: int, pos_z: int,
     hp: int = 200, state: int = 3,
@@ -714,14 +720,14 @@ def _ff_build_enemy_2001(
     body = bytearray()
     body += bytes([0x00, 0x02, 0x01])
     body += uid
-    body += bytes([pos_x, pos_y, pos_z])
+    body += bytes([int(pos_x), int(pos_y), int(pos_z)])
     body += b"\x00\x00"
-    body += hp.to_bytes(2, 'little')
+    body += int(hp).to_bytes(2, 'little')
     body += b"\x00\x00\x00\x00\x00\x00"
-    body += bytes([state, field9, field10, field11])
-    body += encode_varint(varint1)
+    body += bytes([int(state), int(field9), int(field10), int(field11)])
+    body += encode_varint(int(varint1))
     body += b"\x00\x00"
-    body += bytes([checksum])
+    body += bytes([int(checksum)])
     return bytes(body)
 
 def _ff_parse_enemy_2001(body: bytes):
@@ -747,53 +753,6 @@ def _ff_parse_enemy_2001(body: bytes):
     return result
 
 # ============================================================
-# ✅ MOVE SPEED REAL — build_move_packet_real
-# ============================================================
-async def build_move_packet_real(
-    pos_x: int, pos_y: int, pos_z: int,
-    player_index: int,
-    move: int = 0x55,
-    fields: list = None,
-    trailing: int = 0,
-    checksum: int = 0,
-) -> bytes:
-    if fields is None:
-        fields = [169, 104, 1953, 0, 188, 4]
-    ts_now = int(time.time() * 1000)
-    body = _ff_build_move_body(
-        flag=b"\x81\x80\x80\x08",
-        pos_x=pos_x & 0xFFFFFFFF,
-        pos_y=pos_y & 0xFFFFFFFF,
-        pos_z=pos_z & 0xFFFFFFFF,
-        player_index=player_index & 0xFF,
-        fields=fields,
-        timestamp1=ts_now & 0xFFFFFFFF,
-        timestamp2=(ts_now - 100) & 0xFFFFFFFF,
-        timestamp3=(ts_now - 200) & 0xFFFFFFFF,
-        trailing=trailing,
-        checksum=checksum,
-    )
-    return _ff_build_move_packet(move=move, body=body)
-
-# ============================================================
-# ✅ FIRE REAL — build_fire_packet_real
-# ============================================================
-async def build_fire_packet_real(
-    target_uid: bytes, pos_x: int, pos_y: int, pos_z: int,
-    hp: int = 200, state: int = 3, varint1: int = 193,
-) -> bytes:
-    if len(target_uid) != 6:
-        raise ValueError("target_uid harus 6 byte")
-    body = _ff_build_enemy_2001(
-        uid=target_uid,
-        pos_x=pos_x & 0xFF, pos_y=pos_y & 0xFF, pos_z=pos_z & 0xFF,
-        hp=max(0, hp) & 0xFFFF,
-        state=state, field9=0, field10=0x30, field11=0,
-        varint1=varint1, checksum=0,
-    )
-    return bytes.fromhex("68 45 66 b7 61 66 79 66") + body
-
-# ============================================================
 # 🔥 COMPLETE ANTI-AFK (REAL + CAPTURED PAYLOADS)
 # ============================================================
 async def build_complete_anti_afk_packets(
@@ -803,31 +762,42 @@ async def build_complete_anti_afk_packets(
 ) -> list:
     px, py, pz = pos
     packets = []
-    
-    # 1. FIRE (Captured Burst Fire)
+
+    # 1. FIRE (Direct captured body)
     try:
-        packets.append(bytes.fromhex(CAPTURED_FIRE_PACKET))
+        fire_packet = bytes.fromhex(CAPTURED_FIRE_BODY)
+        packets.append(fire_packet)
     except Exception as e:
         print_warning(f"[🔥] fire build err: {e}")
-        
-    # 2. JUMP (Captured Jump)
+
+    # 2. JUMP (Direct captured body)
     if player_state == PLAYER_STATE_MAP.get("jump"):
         try:
-            packets.append(bytes.fromhex(CAPTURED_JUMP_PACKET))
+            jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
+            packets.append(jump_packet)
         except Exception as e:
-            print_warning(f"[🔥] jump build err: {e}")
+        print_warning(f"[🔥] jump build err: {e}")
 
-    # 3. MOVE (Dynamic coordinates + Exact structure)
+    # 3. MOVE (New Real Engine)
     try:
-        packets.append(await build_move_packet_real(
-            pos_x=px, pos_y=py, pos_z=pz,
-            player_index=pid & 0xFF,
-            move=0x55,
-            fields=[player_state, 104, 1953, 0, move_state, 4],
-            trailing=88, checksum=0x048E95,
-        ))
+        slot = int(pid) & 0x03
+        udp_key_byte = udp_key_bytes[0] if udp_key_bytes else 0xfc
+        
+        # Direction vectors (Forward)
+        dir_x = 0.0
+        dir_y = 1.0
+        dir_z = 0.0
+        
+        move_packet = build_real_move_packet(
+            slot=slot, x=px, y=py, z=pz, 
+            net_tick=ts & 0xFFFF, counter_ms=ts,
+            udp_key_byte=udp_key_byte,
+            dir_x=dir_x, dir_y=dir_y, dir_z=dir_z
+        )
+        packets.append(move_packet)
     except Exception as e:
         print_warning(f"[🔥] move build err: {e}")
+
     return packets
 
 # ============================================================
@@ -876,46 +846,8 @@ async def send_newbie_character_tcp(writer, account_id, key, iv):
         print_error(f"[👤] newbie select error: {e}")
         return False
 
-# ==================== LEGACY movement ====================
-async def build_movement_packet_2001(key_bytes, msg_key, player_state, x, y, z,
-                                     tick, counter, move_state, account_uid,
-                                     room_code, phase="game"):
-    if phase == "arena":
-        TAIL = (b"\x00"*7 + b"\xbd\xb6\xe1\xf3\x03" + b"\x00" +
-                b"\xc4\xb6\xe1\xfb\x0b" + b"\x00\x00")
-    elif phase == "game":
-        TAIL = (b"\x00"*7 + b"\x93\xca\xd5\xf9\x0b" +
-                b"\x8e\xfe\xfc\xf7\x0b" +
-                b"\xf4\xe0\xfe\xf7\x03" + b"\x00\x00")
-    else:
-        TAIL = (b"\x00"*7 + b"\xbd\xb6\xe1\xf3\x03" + b"\x00" +
-                b"\xc4\xb6\xe1\xfb\x0b" + b"\x00\x00")
-    x_i = int(x); y_i = int(y); z_i = int(z)
-    body = bytearray()
-    body += await uleb_encode(int(account_uid))
-    body += await uleb_encode(int(player_state))
-    body += await zigzag_encode_signed(x_i)
-    body += await zigzag_encode_signed(y_i)
-    body += await zigzag_encode_signed(z_i)
-    body += b"\x00"
-    body += await uleb_encode(int(move_state))
-    body += TAIL
-    body += await uleb_encode(int(tick))
-    body += b"\x00\x00\x00"
-    body += await uleb_encode(int(counter))
-    body = bytes(body)
-    k = key_bytes[0]
-    v80 = ((k << 8) | k) & 0xFFFF
-    h = bytearray()
-    h.append(msg_key & 0xFF); h.append(0x00); h.append(0x00 ^ k)
-    h += ((2001 ^ v80) & 0xFFFF).to_bytes(2, "little")
-    h += ((len(body) ^ v80) & 0xFFFF).to_bytes(2, "little")
-    h.append(0x00 ^ k)
-    h[1] = (await crc7_buff(0, bytes(h[2:]) + body)) & 0x7F
-    return bytes(h) + body
-
 # ============================================================
-# MOVEMENT CONTROLLER (REAL fire+move)
+# MOVEMENT CONTROLLER
 # ============================================================
 class MovementController:
     def __init__(self, account_id, account_region, key, iv,
@@ -929,7 +861,17 @@ class MovementController:
         self.udp_sock = udp_sock
         self.udp_server = udp_server
         self.udp_key = udp_key_bytes
-        self.match_code = match_code
+        
+        try:
+            if isinstance(match_code, str):
+                self.match_code = [int(c) for c in match_code if c.isdigit()]
+            elif isinstance(match_code, list):
+                self.match_code = [int(c) for c in match_code]
+            else:
+                self.match_code = [1, 3, 4]
+        except Exception:
+            self.match_code = [1, 3, 4]
+            
         self.x = 0.0; self.y = 0.0; self.z = 0.0
         self.tick = 0; self.counter = 0
         self.angle = random.uniform(0, 6.28)
@@ -942,9 +884,9 @@ class MovementController:
         self._last_speed_change = 0.0
         self._last_ping_t = 0.0
         self._last_jump_t = 0.0
-        self.target_uid = None
         self.player_state = PLAYER_STATE_MAP["run"]
         self.move_state = MOVE_STATE_MAP["run"]
+        self.target_uid = None
 
     def _pick_state(self) -> str:
         r = random.random(); c = MOVEMENT_STATE_IDLE_CHANCE
@@ -986,6 +928,8 @@ class MovementController:
             self.x *= ratio; self.y *= ratio
 
     async def _send_fire_and_move(self):
+        if not hasattr(self, 'target_uid'):
+            self.target_uid = None
         if not self.udp_sock or not self.udp_server or not self.udp_key: return 0
         loop = asyncio.get_running_loop()
         self.tick = (self.tick + 1) & 0xFFFFFFFF
@@ -999,7 +943,6 @@ class MovementController:
                 udp_key_bytes=self.udp_key,
                 match_code=self.match_code or [],
                 pos=(int(self.x), int(self.y), int(self.z)),
-                target_uid=self.target_uid,
                 player_state=self.player_state,
                 move_state=self.move_state,
             )
@@ -1029,12 +972,13 @@ class MovementController:
         if not self.udp_sock or not self.udp_server or not self.udp_key: return
         try:
             loop = asyncio.get_running_loop()
-            pkt = await build_move_packet_real(
-                pos_x=int(self.x), pos_y=int(self.y), pos_z=int(self.z),
-                player_index=self.account_id & 0xFF,
-                move=0x56,
-                fields=[PLAYER_STATE_MAP["jump"], 104, 1953, 0, MOVE_STATE_MAP["jump"], 4],
-                trailing=88, checksum=0x048E95,
+            slot = int(self.account_id) & 0x03
+            udp_key_byte = self.udp_key[0] if self.udp_key else 0xfc
+            pkt = build_real_move_packet(
+                slot=slot, x=int(self.x), y=int(self.y), z=int(self.z), 
+                net_tick=int(time.time() * 1000) & 0xFFFF, counter_ms=int(time.time() * 1000),
+                udp_key_byte=udp_key_byte,
+                dir_x=0.0, dir_y=1.0, dir_z=0.0
             )
             await loop.sock_sendto(self.udp_sock, pkt, self.udp_server)
         except Exception: pass
@@ -1576,6 +1520,7 @@ async def start_game_battle_royale(region, client_version, writer, key, iv):
     writer.write(bytes.fromhex(pkt_prefix + hex_length + encrypted_packet))
     await writer.drain()
     print_info(f"[⚔] Br Match search sent ({packet_length}B)")
+
 # ==================== UDP HELPERS ====================
 async def has_ssan_zig(n: int) -> bytes:
     try: n = int(n)
@@ -1774,7 +1719,7 @@ async def build_packet(msg_key, layout, so, cmd, oid, flags, content, key, encry
         if _FIELD_SIZES[code] == 1: hdr.append((val & 0xFF) ^ k)
         else:
             v = ((val & 0xFFFF) ^ v80) & 0xFFFF
-            hdr.append(v & 0xFF); hdr.append((v >> 8) & 0xFFFF) # fixed shift bug visually
+            hdr.append(v & 0xFF); hdr.append((v >> 8) & 0xFF)
     pkt = bytearray(hdr + body)
     pkt[1] = await crc7_buff(0, bytes(pkt[2:])) & 0x7F
     return bytes(pkt)
@@ -1952,7 +1897,10 @@ def cache_invalidate(uid):
     cache = _load_token_cache()
     if str(uid) in cache:
         del cache[str(uid)]; _save_token_cache(cache)
-
+        
+        
+        
+        
 # ==================== PLAY GAME ====================
 async def play_game(server_ip_port, thunder, sharma, udp_key, match_code,
                     account_id, player_region, client_version, key, iv, match_index):
