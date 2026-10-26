@@ -753,7 +753,7 @@ def _ff_parse_enemy_2001(body: bytes):
     return result
 
 # ============================================================
-# 🔥 COMPLETE ANTI-AFK (REAL + CAPTURED PAYLOADS)
+# 🔥 COMPLETE ANTI-AFK (REAL + CAPTURED PAYLOADS) BY :- HAMMAD PAPA DON'T REMOVE CREDIT 🖕🖕
 # ============================================================
 async def build_complete_anti_afk_packets(
     pid: int, ts: int, udp_key_bytes: bytes, match_code: list,
@@ -771,12 +771,12 @@ async def build_complete_anti_afk_packets(
         print_warning(f"[🔥] fire build err: {e}")
 
     # 2. JUMP (Direct captured body)
-    if player_state == PLAYER_STATE_MAP.get("jump"):
-        try:
-            jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
-            packets.append(jump_packet)
-        except Exception as e:
-        print_warning(f"[🔥] jump build err: {e}")
+if player_state == PLAYER_STATE_MAP.get("jump"):
+    try:
+        jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
+        packets.append(jump_packet)
+    except Exception as e:
+        print_warning(f"[🔥] jump build err: {e}")  # FIXED BY HAMMAD PAPA  
 
     # 3. MOVE (New Real Engine)
     try:
