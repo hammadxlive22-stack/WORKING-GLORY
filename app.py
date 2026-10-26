@@ -771,12 +771,12 @@ async def build_complete_anti_afk_packets(
         print_warning(f"[🔥] fire build err: {e}")
 
     # 2. JUMP (Direct captured body)
-if player_state == PLAYER_STATE_MAP.get("jump"):
-    try:
-        jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
-        packets.append(jump_packet)
-    except Exception as e:
-        print_warning(f"[🔥] jump build err: {e}")  # FIXED BY HAMMAD PAPA  
+    if player_state == PLAYER_STATE_MAP.get("jump"):
+        try:
+            jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
+            packets.append(jump_packet)
+        except Exception as e:
+            print_warning(f"[🔥] jump build err: {e}")
 
     # 3. MOVE (New Real Engine)
     try:
