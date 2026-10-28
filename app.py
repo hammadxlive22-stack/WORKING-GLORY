@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 # ============================================================
 #   CGU — FREE FIRE 4-BOT SQUAD (SINGLE FILE - FINAL FIXED)
-#   + REAL MOVE/FIRE/JUMP PACKETS (Dynamic Header Fix)
+#   + REAL MOVE/FIRE/JUMP PACKETS (T10_ROX Bypass Engine)
 #   + NEWBIE SELECT 1 KARAKTER (item_id 102000037)
 #   + COMPLETE ANTI-AFK (Fire+Move+Ping+Jump)
+#   + GETLOGINDATA SERVER ADDRESS FIX
 # ============================================================
 import sys, os, json, time, uuid, random, asyncio, base64, struct, socket
 import itertools, traceback, ssl, hmac, hashlib, string, re, subprocess, math
@@ -80,8 +81,8 @@ ANTI_AFK_SPRINT_CHANCE  = 0.35
 ANTI_AFK_DECISION_SEC   = 2.5
 ANTI_AFK_PING_EVERY     = 2.0
 ANTI_AFK_JUMP_EVERY     = 30.0
-ANTI_AFK_MIN_INTERVAL   = 0.4
-ANTI_AFK_MAX_INTERVAL   = 0.8
+ANTI_AFK_MIN_INTERVAL   = 0.5
+ANTI_AFK_MAX_INTERVAL   = 1.0
 ANTI_AFK_PACKET_GAP     = 0.05
 
 ANALOG_DIRECTIONS = [
@@ -146,62 +147,8 @@ REGION_LANG = {"ME":"ar","IND":"hi","ID":"id","VN":"vi","TH":"th","BD":"bn",
                "SG":"pt","US":"pt"}
 
 # ==================== CAPTURED PAYLOADS ====================
-CAPTURED_JUMP_BODY = "7fa2a3a1a38ba3f316aa397f1348ba3719bd15a447eed7995d6b625c646ece0060dc31404cf79ddfdbcf63c3d501d3"
-CAPTURED_FIRE_BODY = "74a3a355a48fa1003403846bc0f5aa01c00bf10400d003d93f3f0000000006b209c0f5aa01c510ca0300f704663f3f0000000017b49601c0f5aa01d911a503008f05963f3f0000000004826cd0f5aa01d31cd70500ff02ab3f3f000000000dcc15c0f5aa01b6118806004b433f3f000000000a8075c0f5aa018f17f80100e305723f3f0000000011a58d01f2f5aa01c627f70400ce02d23f3f0000000015fe8201c0f5aa01ee03870500b103a73f3f000000000cd5b101d0f5aa01a61dcc0500b302503f3f0000000018b68301c0f5aa0184048706004cc33f3f00000000059e8501c0f5aa01be038c0600103e3f3f0000000008978401c0f5aa01bb0fbe04009004213f3f000000000e9d7ec0f5aa019b0de70100e805f23f3f0000000013c5ad01f2f5aa01bd2b1400b5067e3f3f000000000f8f9301c0f5aa01bc05c40500c6022e3f3f0000000019d074f2f5aa01d62da70400a604df3f3f000000001ab66dc0f5aa018a13bb0200ca05ee3f3f0000000009d671f2f5aa01da289f0400e804e13f3f00000000129d9301c0f5aa01c208b804009604213f3f0000000001c9a001c0f5aa01a5190000003f3f3f0000000002907ec0f5aa01960a47008806fb3f3f0000000007958a01c0f5aa018b09d00500ab024f3f3f0000000016f9aa01c0f5aa018316a80200a604143f3f0000000014a18b01c0f5aa019911c80300cf04643f3f00000000109c67c0f5aa018007cb0500d801cb3f3f000000000bbc70c0f5aa019f0de70500e901b23f3f000000000c"
-
-# ==================== NEW MOVEMENT ENGINE ====================
-KEY0 = 0xfc
-CMD_MOVE = 2001
-
-def _xor(x: int) -> int:
-    return (x ^ KEY0) & 0xFF
-
-def _uvarint(n: int) -> bytes:
-    if n < 0: raise ValueError(n)
-    out = bytearray()
-    while True:
-        b = n & 0x7F
-        n >>= 7
-        if n: out.append(b | 0x80)
-        else:
-            out.append(b)
-            return bytes(out)
-
-def _zigzag(n: int) -> int:
-    return ((n << 1) ^ (n >> 63)) & 0xFFFFFFFFFFFFFFFF
-
-def _f32(x: float) -> int:
-    return int.from_bytes(struct.pack(">f", float(x)), "big")
-
-def build_real_move_packet(slot, x, y, z, net_tick, counter_ms, udp_key_byte, dir_x=0.0, dir_y=1.0, dir_z=0.0):
-    global KEY0
-    KEY0 = udp_key_byte
-    entity = (1 << 24) | (slot & 0xFF)
-    vals = [
-        entity,
-        _zigzag(int(x)), _zigzag(int(y)), _zigzag(int(z)),
-        0, 0, 0, 
-        0, 0,
-        0, 0, 0, 
-        1, 1,
-        _f32(dir_x), _f32(dir_y), _f32(dir_z),
-        0, 0,
-        net_tick,
-        0, 0, 0,
-        counter_ms,
-    ]
-    body = b"".join(_uvarint(v) for v in vals)
-    header = bytes([
-        0x66, 0xB7,
-        _xor(0), 
-        _xor(CMD_MOVE & 0xFF), 
-        _xor((CMD_MOVE >> 8) & 0xFF), 
-        _xor(len(body)), 
-        _xor(0), 
-        _xor(0)
-    ])
-    return header + body
-# ============================================================
+CAPTURED_JUMP_BODY = "5b7ba2baa3a15ba7b3a31c45467cded3d21aff3316d6c3aead84"
+CAPTURED_FIRE_BODY = "6b58a2a3a1a3b3a38c64c7924ad23fc4a714ec52dd6a9c09"
 
 # ==================== STATE ====================
 class BotState:
@@ -753,7 +700,50 @@ def _ff_parse_enemy_2001(body: bytes):
     return result
 
 # ============================================================
-# 🔥 COMPLETE ANTI-AFK (REAL + CAPTURED PAYLOADS) BY :- HAMMAD PAPA DON'T REMOVE CREDIT 🖕🖕
+# 🚀 T10_ROX BYPASS MOVEMENT ENGINE
+# ============================================================
+async def build_movement_packet_2001(key_bytes, msg_key, player_state, x, y, z,
+                                     tick, counter, move_state, account_uid,
+                                     room_code, phase="arena"):
+    _credit = "CREDIT - @T10_ROX"
+    _credit_sum = sum(ord(c) for c in _credit)
+    _credit_key = (_credit_sum * 31) & 0xFFFF
+
+    if phase == "game":
+        TAIL = (b"\x00"*7 + b"\x93\xca\xd5\xf9\x0b" + b"\x8e\xfe\xfc\xf7\x0b"
+                + b"\xf4\xe0\xfe\xf7\x03" + b"\x00\x00")
+    else:
+        TAIL = (b"\x00"*7 + b"\xbd\xb6\xe1\xf3\x03" + b"\x00"
+                + b"\xc4\xb6\xe1\xfb\x0b" + b"\x00\x00")
+
+    body = bytearray()
+    body += await uleb_encode(int(account_uid))
+    body += await uleb_encode(int(player_state))
+    body += await zigzag_encode_signed(int(x))
+    body += await zigzag_encode_signed(int(y))
+    body += await zigzag_encode_signed(int(z))
+    body += b"\x00"
+    body += await uleb_encode(int(move_state))
+    body += TAIL
+    body += await uleb_encode(int(tick))
+
+    body += ((_credit_key ^ counter) & 0xFFFF).to_bytes(2, "little")
+
+    body += b"\x00\x00\x00"
+    body += await uleb_encode(int(counter))
+    body = bytes(body)
+
+    k = key_bytes[0]; v80 = ((k << 8) | k) & 0xFFFF
+    h = bytearray()
+    h.append(msg_key & 0xFF); h.append(0x00); h.append(0x00 ^ k)
+    h += ((2001 ^ v80) & 0xFFFF).to_bytes(2, "little")
+    h += ((len(body) ^ v80) & 0xFFFF).to_bytes(2, "little")
+    h.append(0x00 ^ k)
+    h[1] = (await crc7_buff(0, bytes(h[2:]) + body)) & 0x7F
+    return bytes(h) + body
+
+# ============================================================
+# 🔥 COMPLETE ANTI-AFK (Naya Engine)
 # ============================================================
 async def build_complete_anti_afk_packets(
     pid: int, ts: int, udp_key_bytes: bytes, match_code: list,
@@ -763,14 +753,14 @@ async def build_complete_anti_afk_packets(
     px, py, pz = pos
     packets = []
 
-    # 1. FIRE (Direct captured body)
+    # 1. FIRE (Naya 24-byte payload)
     try:
         fire_packet = bytes.fromhex(CAPTURED_FIRE_BODY)
         packets.append(fire_packet)
     except Exception as e:
         print_warning(f"[🔥] fire build err: {e}")
 
-    # 2. JUMP (Direct captured body)
+    # 2. JUMP (Naya 26-byte payload)
     if player_state == PLAYER_STATE_MAP.get("jump"):
         try:
             jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
@@ -778,21 +768,23 @@ async def build_complete_anti_afk_packets(
         except Exception as e:
             print_warning(f"[🔥] jump build err: {e}")
 
-    # 3. MOVE (New Real Engine)
+    # 3. MOVE (T10_ROX Bypass Engine)
     try:
         slot = int(pid) & 0x03
-        udp_key_byte = udp_key_bytes[0] if udp_key_bytes else 0xfc
+        current_time_ms = int(time.time() * 1000)
+        net_tick = (current_time_ms // 33) & 0xFFFF
         
-        # Direction vectors (Forward)
-        dir_x = 0.0
-        dir_y = 1.0
-        dir_z = 0.0
-        
-        move_packet = build_real_move_packet(
-            slot=slot, x=px, y=py, z=pz, 
-            net_tick=ts & 0xFFFF, counter_ms=ts,
-            udp_key_byte=udp_key_byte,
-            dir_x=dir_x, dir_y=dir_y, dir_z=dir_z
+        move_packet = await build_movement_packet_2001(
+            key_bytes=udp_key_bytes,
+            msg_key=0x66,
+            player_state=player_state,
+            x=px, y=py, z=pz,
+            tick=net_tick,
+            counter=ts & 0xFFFF,
+            move_state=move_state,
+            account_uid=pid,
+            room_code=match_code,
+            phase="game"
         )
         packets.append(move_packet)
     except Exception as e:
@@ -847,7 +839,7 @@ async def send_newbie_character_tcp(writer, account_id, key, iv):
         return False
 
 # ============================================================
-# MOVEMENT CONTROLLER
+# MOVEMENT CONTROLLER (T10_ROX Bypass)
 # ============================================================
 class MovementController:
     def __init__(self, account_id, account_region, key, iv,
@@ -972,15 +964,8 @@ class MovementController:
         if not self.udp_sock or not self.udp_server or not self.udp_key: return
         try:
             loop = asyncio.get_running_loop()
-            slot = int(self.account_id) & 0x03
-            udp_key_byte = self.udp_key[0] if self.udp_key else 0xfc
-            pkt = build_real_move_packet(
-                slot=slot, x=int(self.x), y=int(self.y), z=int(self.z), 
-                net_tick=int(time.time() * 1000) & 0xFFFF, counter_ms=int(time.time() * 1000),
-                udp_key_byte=udp_key_byte,
-                dir_x=0.0, dir_y=1.0, dir_z=0.0
-            )
-            await loop.sock_sendto(self.udp_sock, pkt, self.udp_server)
+            jump_packet = bytes.fromhex(CAPTURED_JUMP_BODY)
+            await loop.sock_sendto(self.udp_sock, jump_packet, self.udp_server)
         except Exception: pass
 
     async def _loop(self):
@@ -1897,10 +1882,7 @@ def cache_invalidate(uid):
     cache = _load_token_cache()
     if str(uid) in cache:
         del cache[str(uid)]; _save_token_cache(cache)
-        
-        
-        
-        
+
 # ==================== PLAY GAME ====================
 async def play_game(server_ip_port, thunder, sharma, udp_key, match_code,
                     account_id, player_region, client_version, key, iv, match_index):
