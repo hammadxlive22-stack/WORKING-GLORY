@@ -5,7 +5,7 @@
 #   + REAL MOVE/FIRE/JUMP PACKETS (T10_ROX Bypass Engine)
 #   + NEWBIE SELECT 1 KARAKTER (item_id 102000037)
 #   + COMPLETE ANTI-AFK (Fire+Move+Ping+Jump)
-#   + GETLOGINDATA SERVER ADDRESS FIX
+#   + GETLOGINDATA SERVER ADDRESS FIX (ONLINE & CHAT)
 # ============================================================
 import sys, os, json, time, uuid, random, asyncio, base64, struct, socket
 import itertools, traceback, ssl, hmac, hashlib, string, re, subprocess, math
